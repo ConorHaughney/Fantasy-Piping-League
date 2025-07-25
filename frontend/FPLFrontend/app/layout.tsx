@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { tartan, TartanBg } from "./components/tartan";
+import NavBar from "./components/NavBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +26,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <TartanBg tartan={tartan} />
-        {children}
+        <NavBar />
+        <div className="container mx-auto px-4">
+          <main>{children}</main>
+        </div>
       </body>
     </html>
   );
