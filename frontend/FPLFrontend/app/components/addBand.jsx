@@ -106,7 +106,7 @@ const AddBand = ({ judgeType }) => {
         >
           Add Band
         </button>
-        
+
         <button
           onClick={() => {
             setBandName("");
