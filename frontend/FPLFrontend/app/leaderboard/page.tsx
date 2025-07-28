@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export default function Page() {
   // Placeholder for top ten players, to be replaced with API data later
-  const [topPlayers, setTopPlayers] = useState([
+  const [topPlayers] = useState([
     "Player 1",
     "Player 2",
     "Player 3",

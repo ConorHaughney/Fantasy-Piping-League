@@ -1,9 +1,8 @@
 import React from "react";
 import "./shield.css";
 
-const BandPark = () => {
+const BandPark = ({ onShieldClick }) => {
     const circleSize = 140;
-
     const secondCircleSize = circleSize - 10;
     const thirdCircleSize = circleSize - 45;
     const fourthCircleSize = circleSize - 55;
@@ -54,7 +53,9 @@ const BandPark = () => {
                     transform: "translate(-50%, -50%)",
                     width: "80px",
                     height: "80px",
+                    cursor: "pointer"
                 }}
+                onClick={() => onShieldClick("Piping 1")}
             >
                 <div className="plus" ></div>
             </div>
@@ -69,7 +70,9 @@ const BandPark = () => {
                     transform: "translate(-50%, -50%)",
                     width: "80px",
                     height: "80px",
+                    cursor: "pointer"
                 }}
+                onClick={() => onShieldClick("Piping 2")}
             >
                 <div className="plus" ></div>
             </div>
@@ -84,7 +87,9 @@ const BandPark = () => {
                     transform: "translate(-50%, -50%)",
                     width: "80px",
                     height: "80px",
+                    cursor: "pointer"
                 }}
+                onClick={() => onShieldClick("Drumming")}
             >
                 <div className="plus" ></div>
             </div>
@@ -99,7 +104,9 @@ const BandPark = () => {
                     transform: "translate(-50%, -50%)",
                     width: "80px",
                     height: "80px",
+                    cursor: "pointer"
                 }}
+                onClick={() => onShieldClick("Ensemble")}
             >
                 <div className="plus" ></div>
             </div>

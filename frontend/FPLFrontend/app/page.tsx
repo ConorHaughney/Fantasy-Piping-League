@@ -1,9 +1,6 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    
-    <div className="flex items-center justify-center min-h-[calc(100vh-56px)]">
+  <div className="flex items-center justify-center min-h-[calc(100vh-56px)]">
       <div className="bg-[#393939] rounded-lg shadow-lg p-8 max-w-md w-full">
         <h2 className="text-2xl text-center font-bold mb-4">
           Welcome to the Fantasy Piping League!
