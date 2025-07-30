@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.FantasyPipingLeague.config.dto.LoginUserDto;
-import com.example.FantasyPipingLeague.config.dto.RegisterUserDto;
-import com.example.FantasyPipingLeague.config.dto.VerifyUserDto;
+import com.example.FantasyPipingLeague.dto.LoginUserDto;
+import com.example.FantasyPipingLeague.dto.RegisterUserDto;
+import com.example.FantasyPipingLeague.dto.VerifyUserDto;
 import com.example.FantasyPipingLeague.model.User;
 import com.example.FantasyPipingLeague.responses.LoginResponse;
 import com.example.FantasyPipingLeague.service.AuthenticationService;

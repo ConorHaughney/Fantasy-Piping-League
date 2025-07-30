@@ -8,9 +8,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.FantasyPipingLeague.config.dto.LoginUserDto;
-import com.example.FantasyPipingLeague.config.dto.RegisterUserDto;
-import com.example.FantasyPipingLeague.config.dto.VerifyUserDto;
+import com.example.FantasyPipingLeague.dto.LoginUserDto;
+import com.example.FantasyPipingLeague.dto.RegisterUserDto;
+import com.example.FantasyPipingLeague.dto.VerifyUserDto;
 import com.example.FantasyPipingLeague.model.User;
 import com.example.FantasyPipingLeague.repository.UserRepository;
 

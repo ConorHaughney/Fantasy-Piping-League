@@ -1,4 +1,4 @@
-package com.example.FantasyPipingLeague.config.dto;
+package com.example.FantasyPipingLeague.dto;
 
 import lombok.Getter;
 import lombok.Setter;
