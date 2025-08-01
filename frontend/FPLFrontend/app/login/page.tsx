@@ -3,25 +3,41 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
+axios.defaults.baseURL = 'http://localhost:8080';
+
 export default function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("/api/login", { email, password });
+    const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    const loginResponse = await axios.post("/auth/login", { email, password });
 
-      localStorage.setItem("token", response.data.token); // Save JWT token
-      router.push("/my-band"); // Redirect to My Band page
-    } catch (error) {
-      // Handle login error (e.g., show an error message)
-      console.error("Login failed:", error);
-    }
-  };
+    localStorage.setItem("token", loginResponse.data.token);
 
-    // This function is now handled by the useState hook
+    const userResponse = await axios.get("/users/me", {
+      headers: {
+        Authorization: `Bearer ${loginResponse.data.token}`,
+      },
+    });
+
+
+    const firstName = userResponse.data.firstName ||
+                     userResponse.data.first_name ||
+                     userResponse.data.name ||
+                     "User";
+
+    localStorage.setItem("firstName", firstName);
+
+    // Force a page refresh to update NavBar
+    window.location.href = "/my-band";
+  } catch (error) {
+    console.error("Login failed:", error);
+    alert("Login failed. Please check your credentials and verify your account if needed.");
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-56px)]">
