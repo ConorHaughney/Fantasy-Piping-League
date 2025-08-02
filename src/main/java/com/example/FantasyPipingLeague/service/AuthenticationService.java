@@ -42,13 +42,13 @@ public class AuthenticationService {
     }
 
     public User authenticate(LoginUserDto loginUserDto) {
-        User user = userRepository.findByEmail(loginUserDto.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + loginUserDto.getEmail()));
+        User user = userRepository.findByUsername(loginUserDto.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + loginUserDto.getUsername()));
         if (!user.isEnabled()) {
             throw new RuntimeException("This account is not verified.");
         }
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getEmail(), loginUserDto.getPassword()));
+                new UsernamePasswordAuthenticationToken(user.getUsername(), loginUserDto.getPassword()));
         return user;
     }
 

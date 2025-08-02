@@ -6,14 +6,17 @@ import { useRouter } from "next/navigation";
 const NavBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [firstName, setFirstName] = useState("");
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    setMounted(true);
+
     const token = localStorage.getItem("token");
-    const storedFirstName = localStorage.getItem("firstName");
-    if (token && storedFirstName) {
+    if (token) {
       setIsLoggedIn(true);
-      setFirstName(storedFirstName);
+      const storedFirstName = localStorage.getItem("firstName");
+      setFirstName(storedFirstName || "User");
     } else {
       setIsLoggedIn(false);
       setFirstName("");
@@ -34,6 +37,31 @@ const NavBar = () => {
     { href: "/leaderboard", text: "Leaderboard" },
     { href: "/how-to-play", text: "How to Play" },
   ];
+
+  // Don't render user-specific content until mounted
+  if (!mounted) {
+    return (
+      <nav className="bg-gray-800 py-2">
+        <div className="flex justify-center space-x-6">
+          {Links.map((link, index) => (
+            <a
+              key={index}
+              href={link.href}
+              className="text-white px-8 py-2 rounded hover:bg-gray-700 transition"
+            >
+              {link.text}
+            </a>
+          ))}
+          <a
+            href="/login"
+            className="text-white px-8 py-2 rounded hover:bg-gray-700 transition"
+          >
+            Log In / Sign Up
+          </a>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="bg-gray-800 py-2">

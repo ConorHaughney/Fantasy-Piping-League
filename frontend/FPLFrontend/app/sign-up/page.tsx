@@ -15,6 +15,11 @@ export default function Page() {
             className="px-4 py-2 rounded bg-[#222] text-white focus:outline-none"
           />
           <input
+            type="text"
+            placeholder="Username"
+            className="px-4 py-2 rounded bg-[#222] text-white focus:outline-none"
+          />
+          <input
             type="email"
             placeholder="Email"
             className="px-4 py-2 rounded bg-[#222] text-white focus:outline-none"
