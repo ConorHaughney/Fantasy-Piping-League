@@ -27,7 +27,7 @@ export default function RootLayout({
       >
         <TartanBg tartan={tartan} />
         <NavBar />
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 pt-12">
           <main>{children}</main>
         </div>
       </body>

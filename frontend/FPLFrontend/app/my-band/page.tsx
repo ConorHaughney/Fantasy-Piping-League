@@ -16,7 +16,7 @@ export default function Page() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-56px)]">
+    <div className="flex items-center justify-center min-h-[calc(100vh-56px)] pt-1">
       {selectedShield && (
         <div className="bg-[#393939] rounded-lg shadow-lg p-8 max-w-md w-full mr-4 relative">
           <button
