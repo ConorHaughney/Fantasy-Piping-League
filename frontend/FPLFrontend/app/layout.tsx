@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { tartan, TartanBg } from "./components/tartan";
 import NavBar from "./components/NavBar";
+import BandDataManager from "./components/bandDataManager";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <BandDataManager />
         <TartanBg tartan={tartan} />
         <NavBar />
         <div className="container mx-auto px-4 pt-12">

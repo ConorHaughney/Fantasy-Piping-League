@@ -38,15 +38,14 @@ const NavBar = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         <div className="flex justify-between items-center h-12">
           <div className="flex items-center h-full">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="text-lg font-bold text-white hover:text-[#FF8A00] transition-colors duration-200 flex items-center h-full"
             >
               Fantasy Piping League
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
           <div className="flex items-center space-x-6 h-full">
             {Links.map((link, index) => (
               <Link
@@ -58,7 +57,7 @@ const NavBar = () => {
                 <span className="absolute inset-x-0 bottom-0 h-0.5 bg-[#FF8A00] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
               </Link>
             ))}
-            
+
             {/* User Section */}
             {isLoggedIn ? (
               <div className="flex items-center space-x-3 h-full">
