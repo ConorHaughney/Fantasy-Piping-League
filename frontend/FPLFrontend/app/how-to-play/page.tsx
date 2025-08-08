@@ -1,4 +1,15 @@
+'use client';
+
+import { useEffect, useState } from "react";
+
 export default function Page() {
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check for token in localStorage
+    setLoggedIn(!!localStorage.getItem("token"));
+  }, []);
+
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-56px)]">
       <div className="bg-[#393939] rounded-lg shadow-lg p-8 max-w-md w-full">
@@ -24,18 +35,21 @@ export default function Page() {
           piping, drumming, and ensemble scores (50 / 25 / 25).
         </p>
         <div className="flex justify-center space-x-4">
-          <a
-            href="/login"
-            className="bg-[#FF8A00] text-white font-bold py-2 px-6 rounded hover:bg-[#E52E71] transition ease-in-out duration-300 w-40 text-center"
-          >
-            Login
-          </a>
-          <a
-            href="/how-to-play"
-            className="bg-[#FF8A00] text-white font-bold py-2 px-6 rounded hover:bg-[#E52E71] transition ease-in-out duration-300 w-40 text-center"
-          >
-            How to Play
-          </a>
+          {loggedIn ? (
+            <a
+              href="/my-band"
+              className="bg-[#FF8A00] text-white font-bold py-2 px-6 rounded hover:bg-[#E52E71] transition ease-in-out duration-300 w-40 text-center"
+            >
+              My Band
+            </a>
+          ) : (
+            <a
+              href="/login"
+              className="bg-[#FF8A00] text-white font-bold py-2 px-6 rounded hover:bg-[#E52E71] transition ease-in-out duration-300 w-40 text-center"
+            >
+              Login
+            </a>
+          )}
         </div>
       </div>
     </div>
