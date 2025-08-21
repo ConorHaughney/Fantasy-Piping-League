@@ -103,18 +103,19 @@ export default function Page() {
         </h2>
         <div className="flex flex-col space-y-4">
           <div className="bg-[#222] rounded p-4 text-white text-center">
-            <BandPark
-              onShieldClick={handleShieldClick}
-              fantasyTeam={fantasyTeam}
-              isLoading={isLoading}
-            />
+            {/* Only render BandPark when loading is complete */}
+            {isLoading ? (
+              <div className="h-64 flex items-center justify-center">
+                <div className="text-white">Loading your team...</div>
+              </div>
+            ) : (
+              <BandPark
+                onShieldClick={handleShieldClick}
+                fantasyTeam={fantasyTeam}
+                isLoading={isLoading}
+              />
+            )}
           </div>
-
-          {isLoading && (
-            <div className="bg-[#222] rounded p-4 text-white text-center">
-              Loading your team...
-            </div>
-          )}
 
           {!isLoading && fantasyTeam && (
             <div className="bg-[#222] rounded p-4 text-white">
