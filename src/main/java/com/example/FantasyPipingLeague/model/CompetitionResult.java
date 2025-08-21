@@ -1,9 +1,15 @@
 package com.example.FantasyPipingLeague.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.List;
 
 @Entity
 @Table(name = "competition_results")
@@ -12,27 +18,43 @@ import java.util.List;
 public class CompetitionResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "result_id")  // Changed from competition_id
-    private Long resultId;       // Changed from competitionId
+    @Column(name = "result_id")
+    private Long resultId;
 
-    // Reference to the competition
     @ManyToOne
-    @JoinColumn(name = "competition_id")
-    private Competition competition;
+    @JoinColumn(name = "competition_id", nullable = false)
+    private Competitions competition;
 
-    @Column(name = "grade")
-    private Integer grade;  // 1, 2, 3, 4, etc.
+    @ManyToOne
+    @JoinColumn(name = "band_id")
+    private Band band;
 
-    // One-to-many relationships for each judge type (fixed mappedBy)
-    @OneToMany(mappedBy = "competitionResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PipingJudge1Result> pipingJudge1Results;
+    @Column(name = "piping_judge_1_score")
+    private Long pipingJudge1Score;
 
-    @OneToMany(mappedBy = "competitionResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PipingJudge2Result> pipingJudge2Results;
+    @Column(name = "piping_judge_2_score")
+    private Long pipingJudge2Score;
 
-    @OneToMany(mappedBy = "competitionResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<DrummingJudgeResult> drummingJudgeResults;
+    @Column(name = "drumming_judge_score")
+    private Long drummingJudgeScore;
 
-    @OneToMany(mappedBy = "competitionResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<EnsembleJudgeResult> ensembleJudgeResults;
+    @Column(name = "ensamble_judge_score")
+    private Long ensembleJudgeScore;
+
+    @Column(name = "total_score")
+    private Integer totalScore;
+
+    @Column(name = "position", nullable = false)
+    private Long position = 0L;
+
+    @Column(name = "on_ep", nullable = false)
+    private Boolean onEp = false;
+
+    // Constructors
+    public CompetitionResult() {}
+
+    public CompetitionResult(Competitions competition, Band band) {
+        this.competition = competition;
+        this.band = band;
+    }
 }
