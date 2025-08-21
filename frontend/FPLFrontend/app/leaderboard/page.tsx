@@ -206,14 +206,6 @@ export default function Page() {
       <div className="bg-[#393939] rounded-lg shadow-lg p-8 max-w-4xl w-full">
         <div className="text-center mb-6">
           <h2 className="text-3xl font-bold mb-2 text-white">🏆 Leaderboard</h2>
-          {leaderboardData && (
-            <div className="text-sm text-gray-300 space-y-1">
-              <p>
-                Week {leaderboardData.weekNumber} • Last updated:{" "}
-                {new Date(leaderboardData.lastUpdated).toLocaleDateString()}
-              </p>
-            </div>
-          )}
         </div>
 
         <div className="bg-[#222] rounded-lg p-6">
