@@ -33,7 +33,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/auth/**").permitAll()
-            .requestMatchers("/users/test-public").permitAll()  // Remove HttpMethod.GET for now
+            .requestMatchers("/users/test-public").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/leaderboard/**").permitAll()
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .anyRequest().authenticated()
         )

@@ -3,6 +3,7 @@
 import BandPark from "../components/bandpark";
 import AddBand from "../components/addBand";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 // Define the interfaces
 interface Band {
@@ -27,10 +28,32 @@ export default function Page() {
   const [selectedShield, setSelectedShield] = useState<string | null>(null);
   const [fantasyTeam, setFantasyTeam] = useState<FantasyTeam | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const router = useRouter();
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsAuthenticated(false);
+        setIsLoading(false);
+        return;
+      }
+      setIsAuthenticated(true);
+    };
+
+    checkAuth();
+  }, []);
 
   const fetchMyTeam = async () => {
     try {
       const token = localStorage.getItem("token");
+
+      if (!token) {
+        setIsAuthenticated(false);
+        return;
+      }
 
       const response = await fetch(
         "http://localhost:8080/api/fantasy-teams/my-team",
@@ -42,6 +65,13 @@ export default function Page() {
           },
         }
       );
+
+      if (response.status === 401 || response.status === 403) {
+        // Token is invalid or expired
+        localStorage.removeItem("token");
+        setIsAuthenticated(false);
+        return;
+      }
 
       if (response.ok) {
         const data = await response.json();
@@ -60,8 +90,10 @@ export default function Page() {
   };
 
   useEffect(() => {
-    fetchMyTeam();
-  }, []);
+    if (isAuthenticated) {
+      fetchMyTeam();
+    }
+  }, [isAuthenticated]);
 
   const handleShieldClick = (shieldType: string) => {
     setSelectedShield(shieldType);
@@ -77,6 +109,68 @@ export default function Page() {
     setSelectedShield(null); // Close the panel
   };
 
+  const handleLogin = () => {
+    router.push("/login");
+  };
+
+  const handleSignUp = () => {
+    router.push("/sign-up");
+  };
+
+  // Show login prompt if not authenticated
+  if (isAuthenticated === false) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-56px)]">
+        <div className="bg-[#393939] rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+          <h2 className="text-3xl font-bold mb-6 text-white">
+            Login Required
+          </h2>
+          <div className="mb-6">
+            <p className="text-white mb-4">
+              You need to be logged in to view your fantasy team.
+            </p>
+            <p className="text-gray-300 text-sm">
+              Create your account to start building your fantasy piping team!
+            </p>
+          </div>
+          <div className="space-y-4">
+            <button
+              onClick={handleLogin}
+              className="w-full bg-[#FF8A00] text-white font-bold py-3 px-6 rounded hover:bg-[#E52E71] transition"
+            >
+              Login
+            </button>
+            <button
+              onClick={handleSignUp}
+              className="w-full bg-gray-600 text-white font-bold py-3 px-6 rounded hover:bg-gray-500 transition"
+            >
+              Sign Up
+            </button>
+          </div>
+          <div className="mt-6 pt-4 border-t border-gray-600">
+            <p className="text-gray-400 text-xs">
+              Fantasy Piping League - Build your dream pipe band team
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading spinner while checking authentication
+  if (isAuthenticated === null || (isAuthenticated && isLoading)) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-56px)]">
+        <div className="bg-[#393939] rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+          <div className="text-white text-lg">
+            Loading...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Main authenticated content
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-56px)] pt-1">
       {selectedShield && (
@@ -103,21 +197,14 @@ export default function Page() {
         </h2>
         <div className="flex flex-col space-y-4">
           <div className="bg-[#222] rounded p-4 text-white text-center">
-            {/* Only render BandPark when loading is complete */}
-            {isLoading ? (
-              <div className="h-64 flex items-center justify-center">
-                <div className="text-white">Loading your team...</div>
-              </div>
-            ) : (
-              <BandPark
-                onShieldClick={handleShieldClick}
-                fantasyTeam={fantasyTeam}
-                isLoading={isLoading}
-              />
-            )}
+            <BandPark
+              onShieldClick={handleShieldClick}
+              fantasyTeam={fantasyTeam}
+              isLoading={false}
+            />
           </div>
 
-          {!isLoading && fantasyTeam && (
+          {fantasyTeam && (
             <div className="bg-[#222] rounded p-4 text-white">
               <h3 className="text-lg font-semibold mb-2 text-center">
                 Team: {fantasyTeam.teamName}
@@ -151,7 +238,7 @@ export default function Page() {
             </div>
           )}
 
-          {!isLoading && !fantasyTeam && (
+          {!fantasyTeam && (
             <div className="bg-[#222] rounded p-4 text-white text-center">
               <p className="mb-2">No fantasy team found.</p>
               <p className="text-sm text-gray-400">Create your team by selecting bands above!</p>
