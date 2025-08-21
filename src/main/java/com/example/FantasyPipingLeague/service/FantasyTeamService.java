@@ -5,14 +5,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.FantasyPipingLeague.repository.UserRepository;
-import com.example.FantasyPipingLeague.repository.BandRepository;
-import com.example.FantasyPipingLeague.repository.FantasyTeamRepository;
-import com.example.FantasyPipingLeague.repository.FantasyTeamBandRepository;
-import com.example.FantasyPipingLeague.model.User;
 import com.example.FantasyPipingLeague.model.Band;
 import com.example.FantasyPipingLeague.model.FantasyTeam;
-import com.example.FantasyPipingLeague.model.FantasyTeamBand;
+import com.example.FantasyPipingLeague.model.User;
+import com.example.FantasyPipingLeague.repository.BandRepository;
+import com.example.FantasyPipingLeague.repository.FantasyTeamRepository;
+import com.example.FantasyPipingLeague.repository.UserRepository;
 
 @Service
 public class FantasyTeamService {
@@ -26,10 +24,7 @@ public class FantasyTeamService {
     @Autowired
     private FantasyTeamRepository fantasyTeamRepository;
 
-    @Autowired
-    private FantasyTeamBandRepository fantasyTeamBandRepository;
-
-    public FantasyTeamBand addBandToTeam(String username, Long bandId, String judgeType) {
+    public FantasyTeam addBandToTeam(String username, Long bandId, String judgeType) {
         try {
             System.out.println("=== SERVICE: addBandToTeam ===");
             System.out.println("Looking for user: " + username);
@@ -65,35 +60,73 @@ public class FantasyTeamService {
                     });
 
             System.out.println("Fantasy team: " + fantasyTeam.getId());
-            System.out.println("Checking for existing band-judge combination...");
+            System.out.println("Assigning band to judge type: " + judgeType);
 
-            // Check if band is already added for this judge type
-            Optional<FantasyTeamBand> existingEntry = fantasyTeamBandRepository
-                    .findByFantasyTeamAndJudgeType(fantasyTeam, judgeType);
-
-            FantasyTeamBand fantasyTeamBand;
-
-            if (existingEntry.isPresent()) {
-                // Update existing entry
-                System.out.println("Updating existing entry for judge type: " + judgeType);
-                fantasyTeamBand = existingEntry.get();
-                fantasyTeamBand.setBand(band); // Update to new band
-            } else {
-                // Create new entry
-                System.out.println("Creating new fantasy team band entry...");
-                fantasyTeamBand = new FantasyTeamBand();
-                fantasyTeamBand.setFantasyTeam(fantasyTeam);
-                fantasyTeamBand.setBand(band);
-                fantasyTeamBand.setJudgeType(judgeType);
+            // Assign band to the appropriate judge type field
+            switch (judgeType.toLowerCase()) {
+                case "piping1", "piping_1" -> fantasyTeam.setPiping1Band(band);
+                case "piping2", "piping_2" -> fantasyTeam.setPiping2Band(band);
+                case "drumming" -> fantasyTeam.setDrummingBand(band);
+                case "ensemble", "ensamble" -> fantasyTeam.setEnsembleBand(band);
+                default -> throw new RuntimeException("Invalid judge type: " + judgeType);
             }
 
-            FantasyTeamBand saved = fantasyTeamBandRepository.save(fantasyTeamBand);
-            System.out.println("SUCCESS: Fantasy team band saved with ID: " + saved.getId());
+            FantasyTeam saved = fantasyTeamRepository.save(fantasyTeam);
+            System.out.println("SUCCESS: Fantasy team updated with new band assignment");
 
             return saved;
 
         } catch (Exception e) {
             System.err.println("SERVICE ERROR: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public FantasyTeam getFantasyTeamByUsername(String username) {
+        try {
+            System.out.println("=== SERVICE: getFantasyTeamByUsername ===");
+            System.out.println("Looking for user: " + username);
+
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found: " + username));
+
+            Optional<FantasyTeam> fantasyTeam = fantasyTeamRepository.findByUser(user);
+
+            if (fantasyTeam.isPresent()) {
+                System.out.println("Fantasy team found for user: " + username);
+                return fantasyTeam.get();
+            } else {
+                System.out.println("No fantasy team found for user: " + username);
+                return null;
+            }
+
+        } catch (Exception e) {
+            System.err.println("SERVICE ERROR in getFantasyTeamByUsername: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public FantasyTeam createFantasyTeam(String username, String teamName) {
+        try {
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found: " + username));
+
+            // Check if user already has a fantasy team
+            Optional<FantasyTeam> existingTeam = fantasyTeamRepository.findByUser(user);
+            if (existingTeam.isPresent()) {
+                throw new RuntimeException("User already has a fantasy team");
+            }
+
+            FantasyTeam fantasyTeam = new FantasyTeam();
+            fantasyTeam.setUser(user);
+            fantasyTeam.setTeamName(teamName);
+
+            return fantasyTeamRepository.save(fantasyTeam);
+
+        } catch (Exception e) {
+            System.err.println("SERVICE ERROR in createFantasyTeam: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }

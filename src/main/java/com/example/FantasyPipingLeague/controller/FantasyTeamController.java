@@ -2,25 +2,25 @@ package com.example.FantasyPipingLeague.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.FantasyPipingLeague.dto.AddBandDto;
-import com.example.FantasyPipingLeague.service.FantasyTeamService;
 import com.example.FantasyPipingLeague.model.Band;
-import com.example.FantasyPipingLeague.model.FantasyTeamBand;
+import com.example.FantasyPipingLeague.model.FantasyTeam;
+import com.example.FantasyPipingLeague.repository.BandRepository;
 import com.example.FantasyPipingLeague.responses.AddBandResponse;
 import com.example.FantasyPipingLeague.responses.ErrorResponse;
-
-import com.example.FantasyPipingLeague.repository.BandRepository;
-
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import com.example.FantasyPipingLeague.model.Band;
+import com.example.FantasyPipingLeague.service.FantasyTeamService;
 
 @RestController
 @RequestMapping("/api/fantasy-teams")
@@ -52,17 +52,21 @@ public class FantasyTeamController {
             System.out.println("Username extracted: " + username);
 
             System.out.println("Calling service to add band...");
-            FantasyTeamBand result = fantasyTeamService.addBandToTeam(
+            FantasyTeam result = fantasyTeamService.addBandToTeam(
                     username,
                     request.getBandId(),
                     request.getJudgeType());
 
             System.out.println("Service call successful, creating response...");
+
+            // Get the band that was just added based on judge type
+            Band addedBand = getBandByJudgeType(result, request.getJudgeType());
+
             AddBandResponse response = new AddBandResponse(
                     "Band added successfully",
                     result.getId(),
-                    result.getBand().getBands(),
-                    result.getJudgeType());
+                    addedBand != null ? addedBand.getBands() : "Unknown",
+                    request.getJudgeType());
 
             System.out.println("SUCCESS: Returning response - " + response.getMessage());
             return ResponseEntity.ok(response);
@@ -72,6 +76,42 @@ public class FantasyTeamController {
             System.err.println("Exception type: " + e.getClass().getSimpleName());
             e.printStackTrace();
 
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/my-team")
+    public ResponseEntity<?> getMyTeam(Authentication auth) {
+        try {
+            if (auth == null) {
+                return ResponseEntity.badRequest().body(new ErrorResponse("Authentication required"));
+            }
+
+            String username = auth.getName();
+            FantasyTeam team = fantasyTeamService.getFantasyTeamByUsername(username);
+
+            if (team == null) {
+                return ResponseEntity.ok(new HashMap<String, String>() {
+                    {
+                        put("message", "No fantasy team found for user");
+                    }
+                });
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("teamName", team.getTeamName());
+            response.put("piping1Band", team.getPiping1Band());
+            response.put("piping2Band", team.getPiping2Band());
+            response.put("drummingBand", team.getDrummingBand());
+            response.put("ensembleBand", team.getEnsembleBand());
+            response.put("createdAt", team.getCreatedAt());
+            response.put("updatedAt", team.getUpdatedAt());
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            System.err.println("ERROR in getMyTeam: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
         }
     }
@@ -98,5 +138,15 @@ public class FantasyTeamController {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(new ErrorResponse("Database error: " + e.getMessage()));
         }
+    }
+
+    private Band getBandByJudgeType(FantasyTeam team, String judgeType) {
+        return switch (judgeType.toLowerCase()) {
+            case "piping1", "piping_1" -> team.getPiping1Band();
+            case "piping2", "piping_2" -> team.getPiping2Band();
+            case "drumming" -> team.getDrummingBand();
+            case "ensemble", "ensamble" -> team.getEnsembleBand();
+            default -> null;
+        };
     }
 }

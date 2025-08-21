@@ -32,3 +32,28 @@
     transform: translate(-50%, -50%);
     border-radius: 6px;
 }
+
+
+.shield.assigned {
+    background-color: #FF8A00; /* Orange background for assigned bands */
+    border: 2px solid #E52E71; /* Pink border for assigned bands */
+}
+
+.band-name {
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    word-wrap: break-word;
+    padding: 2px;
+    line-height: 1.1;
+}
+
+.shield:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+.shield.assigned:hover {
+    background-color: #E52E71; /* Change to pink on hover */
+}

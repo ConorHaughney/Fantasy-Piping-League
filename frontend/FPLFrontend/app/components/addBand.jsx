@@ -1,10 +1,27 @@
 import React, { useState } from "react";
 import { searchBands } from "./bandDataManager";
 
-const AddBand = ({ judgeType }) => {
+const AddBand = ({ judgeType, onBandAdded }) => {
     const [bandName, setBandName] = useState("");
     const [selectedBand, setSelectedBand] = useState(null);
     const [searchResults, setSearchResults] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Map frontend judge types to backend expected values
+    const mapJudgeTypeToBackend = (frontendJudgeType) => {
+        switch (frontendJudgeType) {
+            case "Piping 1":
+                return "piping1";
+            case "Piping 2":
+                return "piping2";
+            case "Drumming":
+                return "drumming";
+            case "Ensemble":
+                return "ensemble";
+            default:
+                return frontendJudgeType.toLowerCase();
+        }
+    };
 
     const handleSearch = (searchTerm) => {
         setBandName(searchTerm);
@@ -25,12 +42,17 @@ const AddBand = ({ judgeType }) => {
 
     const handleAddBand = async () => {
         if (selectedBand) {
+            setIsLoading(true);
             try {
                 const token = localStorage.getItem("token");
 
+                // Map the judge type to backend format
+                const backendJudgeType = mapJudgeTypeToBackend(judgeType);
+
                 console.log('Sending request:', {
                     bandId: selectedBand.id,
-                    judgeType: judgeType,
+                    judgeType: backendJudgeType, // Use mapped value
+                    originalJudgeType: judgeType,
                     token: token ? 'Token exists' : 'No token'
                 });
 
@@ -42,14 +64,13 @@ const AddBand = ({ judgeType }) => {
                     },
                     body: JSON.stringify({
                         bandId: selectedBand.id,
-                        judgeType: judgeType
+                        judgeType: backendJudgeType // Use mapped value
                     }),
                 });
 
                 console.log('Response status:', response.status);
 
                 if (!response.ok) {
-                    // Try to get the error message from the response
                     let errorMessage = `HTTP error! status: ${response.status}`;
                     try {
                         const errorData = await response.json();
@@ -64,16 +85,23 @@ const AddBand = ({ judgeType }) => {
                 const result = await response.json();
                 console.log('Success result:', result);
 
-                // Updated success message
+                // Success message
                 alert(`${selectedBand.bands} set as your ${judgeType} choice!`);
 
                 // Reset form
                 setBandName("");
                 setSelectedBand(null);
 
+                // Notify parent component if callback provided
+                if (onBandAdded) {
+                    onBandAdded();
+                }
+
             } catch (error) {
                 console.error('Error adding band:', error);
                 alert(`Failed to add band: ${error.message}`);
+            } finally {
+                setIsLoading(false);
             }
         }
     };
@@ -91,6 +119,7 @@ const AddBand = ({ judgeType }) => {
                     onChange={(e) => handleSearch(e.target.value)}
                     placeholder="Search for a band..."
                     className="w-full px-4 py-2 rounded-lg bg-[#393939] text-white border border-gray-600 focus:border-[#FF8A00] focus:outline-none"
+                    disabled={isLoading}
                 />
 
                 {searchResults.length > 0 && (
@@ -101,7 +130,7 @@ const AddBand = ({ judgeType }) => {
                                 onClick={() => handleSelectBand(band)}
                                 className="px-4 py-2 hover:bg-[#555] cursor-pointer border-b border-gray-600 last:border-b-0"
                             >
-                                <div className="text-white font-medium">{band.bands}</div> {/* Changed from band.name to band.bands */}
+                                <div className="text-white font-medium">{band.bands}</div>
                                 <div className="text-gray-400 text-sm">Grade {band.grade || 'not specified'}</div>
                             </div>
                         ))}
@@ -118,7 +147,7 @@ const AddBand = ({ judgeType }) => {
             {selectedBand && (
                 <div className="mb-4 p-3 bg-[#555] rounded-lg">
                     <div className="text-white font-medium">Selected:</div>
-                    <div className="text-[#FF8A00]">{selectedBand.bands}</div> {/* Changed from selectedBand.name to selectedBand.bands */}
+                    <div className="text-[#FF8A00]">{selectedBand.bands}</div>
                     <div className="text-gray-400 text-sm">Grade {selectedBand.grade || 'not specified'}</div>
                 </div>
             )}
@@ -126,13 +155,13 @@ const AddBand = ({ judgeType }) => {
             <div className="flex gap-2">
                 <button
                     onClick={handleAddBand}
-                    disabled={!selectedBand}
-                    className={`flex-1 py-2 px-4 rounded-lg font-medium transition ${selectedBand
+                    disabled={!selectedBand || isLoading}
+                    className={`flex-1 py-2 px-4 rounded-lg font-medium transition ${selectedBand && !isLoading
                         ? "bg-[#FF8A00] hover:bg-[#E52E71] text-white"
                         : "bg-gray-600 text-gray-400 cursor-not-allowed"
                         }`}
                 >
-                    Add Band
+                    {isLoading ? "Adding..." : "Add Band"}
                 </button>
 
                 <button
@@ -142,6 +171,7 @@ const AddBand = ({ judgeType }) => {
                         setSearchResults([]);
                     }}
                     className="px-4 py-2 rounded-lg bg-gray-600 hover:bg-gray-500 text-white transition"
+                    disabled={isLoading}
                 >
                     Clear
                 </button>

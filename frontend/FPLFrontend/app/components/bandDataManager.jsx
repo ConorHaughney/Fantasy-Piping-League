@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
 
 // Export utility functions outside the component
 export const getBandsFromCache = () => {
@@ -38,33 +37,31 @@ const BandDataManager = () => {
     const CACHE_EXPIRY_KEY = 'bands_cache_expiry';
     const CACHE_DURATION = 24 * 60 * 60 * 1000;
 
-    const getSupabaseClient = () => {
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-        if (!supabaseUrl || !supabaseKey) {
-            console.error('Missing Supabase environment variables');
-            return null;
-        }
-
-        return createClient(supabaseUrl, supabaseKey);
-    };
-
     const fetchAndCacheBands = async () => {
         try {
-            const supabase = getSupabaseClient();
-            if (!supabase) return;
+            const token = localStorage.getItem('token');
+            
+            const response = await fetch('http://localhost:8080/api/fantasy-teams/test-bands', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
 
-            const { data: bands, error } = await supabase
-                .from('Bands')
-                .select('*');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-            if (!error && bands && bands.length > 0) {
-                localStorage.setItem(BANDS_CACHE_KEY, JSON.stringify(bands));
+            const data = await response.json();
+            
+            if (data.bands && data.bands.length > 0) {
+                localStorage.setItem(BANDS_CACHE_KEY, JSON.stringify(data.bands));
                 localStorage.setItem(CACHE_EXPIRY_KEY, Date.now().toString());
+                console.log('Cached', data.bands.length, 'bands from Spring Boot API');
             }
         } catch (error) {
-            console.error('Error fetching band data:', error);
+            console.error('Error fetching band data from API:', error);
         }
     };
 
