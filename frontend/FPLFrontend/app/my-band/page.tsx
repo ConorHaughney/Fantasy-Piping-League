@@ -24,6 +24,14 @@ interface FantasyTeam {
   updatedAt?: string;
 }
 
+// Helper to get either user or admin token
+function getToken() {
+  return (
+    localStorage.getItem("token") ||
+    localStorage.getItem("adminToken")
+  );
+}
+
 export default function Page() {
   const [selectedShield, setSelectedShield] = useState<string | null>(null);
   const [fantasyTeam, setFantasyTeam] = useState<FantasyTeam | null>(null);
@@ -34,7 +42,7 @@ export default function Page() {
   // Check authentication status
   useEffect(() => {
     const checkAuth = () => {
-      const token = localStorage.getItem("token");
+      const token = getToken();
       if (!token) {
         setIsAuthenticated(false);
         setIsLoading(false);
@@ -48,7 +56,7 @@ export default function Page() {
 
   const fetchMyTeam = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
 
       if (!token) {
         setIsAuthenticated(false);

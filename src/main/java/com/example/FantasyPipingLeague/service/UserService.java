@@ -28,11 +28,22 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("=== UserDetailsService called ===");
         System.out.println("Looking for user with username: " + username);
-        
+
         User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-        
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+
         System.out.println("Found user: " + user.getUsername() + " with email: " + user.getEmail());
         return user;
+    }
+
+    public void toggleUserStatus(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setEnabled(!user.isEnabled());
+        userRepository.save(user);
+    }
+
+    public java.util.Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
     }
 }
