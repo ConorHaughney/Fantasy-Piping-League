@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { searchBands } from "./bandDataManager";
 
-const AddBand = ({ judgeType, onBandAdded }) => {
+const AddBand = ({ judgeType, onBandAdded, pointsRemaining}) => {
     const [bandName, setBandName] = useState("");
     const [selectedBand, setSelectedBand] = useState(null);
     const [searchResults, setSearchResults] = useState([]);
@@ -42,6 +42,17 @@ const AddBand = ({ judgeType, onBandAdded }) => {
 
     const handleAddBand = async () => {
         if (selectedBand) {
+
+            if (
+                typeof selectedBand.pointsCost === "number" &&
+                pointsRemaining - selectedBand.pointsCost < 0
+            ) {
+                alert(
+                    `You do not have enough points to add ${selectedBand.bands}.`
+                );
+                return;
+            }
+
             setIsLoading(true);
             try {
                 const token = localStorage.getItem("token");

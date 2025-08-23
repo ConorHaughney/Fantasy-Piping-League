@@ -2,6 +2,7 @@
 
 import BandPark from "../components/bandpark";
 import AddBand from "../components/addBand";
+import PointsBox from "../components/pointsBox";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -26,10 +27,7 @@ interface FantasyTeam {
 
 // Helper to get either user or admin token
 function getToken() {
-  return (
-    localStorage.getItem("token") ||
-    localStorage.getItem("adminToken")
-  );
+  return localStorage.getItem("token") || localStorage.getItem("adminToken");
 }
 
 export default function Page() {
@@ -38,6 +36,8 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const router = useRouter();
+
+  const TOTAL_POINTS = 100;
 
   // Check authentication status
   useEffect(() => {
@@ -130,9 +130,7 @@ export default function Page() {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-56px)]">
         <div className="bg-[#393939] rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-          <h2 className="text-3xl font-bold mb-6 text-white">
-            Login Required
-          </h2>
+          <h2 className="text-3xl font-bold mb-6 text-white">Login Required</h2>
           <div className="mb-6">
             <p className="text-white mb-4">
               You need to be logged in to view your fantasy team.
@@ -170,13 +168,23 @@ export default function Page() {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-56px)]">
         <div className="bg-[#393939] rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-          <div className="text-white text-lg">
-            Loading...
-          </div>
+          <div className="text-white text-lg">Loading...</div>
         </div>
       </div>
     );
   }
+
+  function calculateUsedPoints(team: FantasyTeam | null) {
+    let used = 0;
+    if (team?.piping1Band?.pointsCost) used += team.piping1Band.pointsCost;
+    if (team?.piping2Band?.pointsCost) used += team.piping2Band.pointsCost;
+    if (team?.drummingBand?.pointsCost) used += team.drummingBand.pointsCost;
+    if (team?.ensembleBand?.pointsCost) used += team.ensembleBand.pointsCost;
+    return used;
+  }
+
+  const usedPoints = calculateUsedPoints(fantasyTeam);
+  const pointsRemaining = TOTAL_POINTS - usedPoints;
 
   // Main authenticated content
   return (
@@ -194,7 +202,7 @@ export default function Page() {
             {selectedShield}
           </h2>
           <div className="bg-[#222] rounded p-4 text-white text-center">
-            <AddBand judgeType={selectedShield} onBandAdded={handleBandAdded} />
+            <AddBand judgeType={selectedShield} onBandAdded={handleBandAdded} pointsRemaining={pointsRemaining} />
           </div>
         </div>
       )}
@@ -203,6 +211,7 @@ export default function Page() {
         <h2 className="text-2xl text-center font-bold mb-4 text-white">
           My Band
         </h2>
+        <PointsBox pointsRemaining={pointsRemaining} />
         <div className="flex flex-col space-y-4">
           <div className="bg-[#222] rounded p-4 text-white text-center">
             <BandPark
@@ -249,7 +258,9 @@ export default function Page() {
           {!fantasyTeam && (
             <div className="bg-[#222] rounded p-4 text-white text-center">
               <p className="mb-2">No fantasy team found.</p>
-              <p className="text-sm text-gray-400">Create your team by selecting bands above!</p>
+              <p className="text-sm text-gray-400">
+                Create your team by selecting bands above!
+              </p>
             </div>
           )}
 
