@@ -235,7 +235,13 @@ const AddBand = ({ judgeType, onBandAdded, pointsRemaining, currentBand }) => {
                 <button
                     onClick={handleRemoveBand}
                     disabled={isRemoving}
-                    className="w-full mt-4 py-2 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition"
+                    className={`w-full mt-4 py-2 px-4 rounded-lg font-medium 
+            ${selectedBand
+                            ? "bg-red-800 hover:bg-red-600 text-white"
+                            : "bg-red-600 hover:bg-red-500 text-white"
+                        }
+            transition-colors duration-200 ease-in-out
+        `}
                 >
                     {isRemoving ? "Removing..." : "Remove Band"}
                 </button>

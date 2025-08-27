@@ -55,16 +55,6 @@
     line-height: 1.1;
 }
 
-.shield:hover {
-    transform: scale(1.05);
-    transition: transform 0.2s ease;
-}
-
-.shield.assigned:hover {
-    background-color: #E52E71;
-    /* Change to pink on hover */
-}
-
 
 /* Specific styles for each shield */
 .shield-fmm {
@@ -72,51 +62,51 @@
 }
 
 .shield-idpb {
-    background-color: blue !important;
+    background-color: #182841 !important;
 }
 
 .shield-shotts {
-    background-color: #d0d0d0 !important;
+    background-color: #1d2b5c !important;
 }
 
 .shield-psf {
-    background-color: #c0c0c0 !important;
+    background-color: white !important;
 }
 
 .shield-slot {
-    background-color: #a0a0a0 !important;
+    background-color: white !important;
 }
 
 .shield-boghall {
-    background-color: #a0a0a0 !important;
+    background-color: white !important;
 }
 
 .shield-power {
-    background-color: #909090 !important;
+    background-color: white !important;
 }
 
 .shield-ravara {
-    background-color: #808080 !important;
+    background-color: #020042 !important;
 }
 
 .shield-closkelt {
-    background-color: #707070 !important;
+    background-color: white !important;
 }
 
 .shield-johnstone {
-    background-color: #b0b0b0 !important;
+    background-color: white !important;
 }
 
 .shield-78fh {
-    background-color: #606060 !important;
+    background-color: white !important;
 }
 
 .shield-thomas {
-    background-color: #505050 !important;
+    background-color: white !important;
 }
 
 .shield-sfu {
-    background-color: #a0a0a0 !important;
+    background-color: #c62132 !important;
 }
 
 .shield-manawatu {

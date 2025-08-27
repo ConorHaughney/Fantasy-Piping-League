@@ -62,33 +62,33 @@ const getLogoStyle = (band) => {
 
     switch (true) {
         case name.includes("inveraray"):
-            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-10px)" };
+            return { width: "110%", height: "110%", objectFit: "contain" };
         case name.includes("field marshal"):
-            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-8px)" };
+            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-8px) translateX(3px)" };
         case name.includes("shotts"):
-            return { width: "88%", height: "88%", objectFit: "contain", transform: "translateY(-7px)" };
+            return { width: "80%", objectFit: "contain", transform: "translateY(-5px)" };
         case name.includes("police scotland fife"):
-            return { width: "75%", height: "75%", objectFit: "contain", transform: "translateY(-6px)" };
+            return { width: "80%", objectFit: "contain", transform: "translateY(-6px)" };
         case name.includes("st laurence"):
-            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-8px)" };
+            return { width: "85%", objectFit: "contain", transform: "translateY(-5px)" };
         case name.includes("boghall"):
-            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-9px)" };
+            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-3px)" };
         case name.includes("power"):
-            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-7px)" };
+            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-5px)" };
         case name.includes("ravara"):
-            return { width: "90%", height: "90%", objectFit: "contain", transform: "translateY(-5px)" };
+            return { width: "85%", objectFit: "contain", transform: "translateY(-5px)" };
         case name.includes("closkelt"):
-            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-6px)" };
+            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-5px)" };
         case name.includes("johnstone"):
-            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-10px)" };
+            return { width: "85%", objectFit: "contain", transform: "translateY(-5px)" };
         case name.includes("78th fraser"):
-            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-8px)" };
+            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-5px)" };
         case name.includes("thomas alumni"):
-            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-7px)" };
+            return { width: "138%", height: "105px", objectFit: "contain", transform: "translateY(-8px)" };
         case name.includes("simon fraser"):
-            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-9px)" };
+            return { width: "75%", height: "85%", objectFit: "contain", transform: "translateY(-20px)" };
         case name.includes("manawatu"):
-            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-8px)" };
+            return { width: "120%", objectFit: "contain" };
         default:
             return { width: "90%", height: "90%", objectFit: "contain", transform: "translateY(-5px)" };
     }

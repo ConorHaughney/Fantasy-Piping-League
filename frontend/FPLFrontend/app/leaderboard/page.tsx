@@ -276,14 +276,6 @@ export default function Page() {
             </div>
           )}
         </div>
-
-        <div className="mt-6 text-center">
-          <div className="bg-[#2a2a2a] rounded-lg p-4 text-sm text-gray-300 flex items-center justify-center">
-            <p className="mb-0">
-              📅 <strong>Updates:</strong> After every competition
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );
