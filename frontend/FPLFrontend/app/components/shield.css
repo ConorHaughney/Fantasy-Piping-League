@@ -5,9 +5,13 @@
 .shield {
     height: 200px;
     width: 200px;
-    border: 10px solid var(--shield-border-color);
+    border: 2px solid var(--shield-border-color);
     border-radius: 50% 50% 50% 50% / 12% 12% 88% 88%;
     background-color: darkgray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
 .plus {
@@ -35,8 +39,10 @@
 
 
 .shield.assigned {
-    background-color: #FF8A00; /* Orange background for assigned bands */
-    border: 2px solid #E52E71; /* Pink border for assigned bands */
+    background-color: #ffffff;
+    /* Grey background for assigned bands */
+    border: 2px solid black;
+    /* Black border for assigned bands */
 }
 
 .band-name {
@@ -55,5 +61,64 @@
 }
 
 .shield.assigned:hover {
-    background-color: #E52E71; /* Change to pink on hover */
+    background-color: #E52E71;
+    /* Change to pink on hover */
+}
+
+
+/* Specific styles for each shield */
+.shield-fmm {
+    background-color: #707070 !important;
+}
+
+.shield-idpb {
+    background-color: blue !important;
+}
+
+.shield-shotts {
+    background-color: #d0d0d0 !important;
+}
+
+.shield-psf {
+    background-color: #c0c0c0 !important;
+}
+
+.shield-slot {
+    background-color: #a0a0a0 !important;
+}
+
+.shield-boghall {
+    background-color: #a0a0a0 !important;
+}
+
+.shield-power {
+    background-color: #909090 !important;
+}
+
+.shield-ravara {
+    background-color: #808080 !important;
+}
+
+.shield-closkelt {
+    background-color: #707070 !important;
+}
+
+.shield-johnstone {
+    background-color: #b0b0b0 !important;
+}
+
+.shield-78fh {
+    background-color: #606060 !important;
+}
+
+.shield-thomas {
+    background-color: #505050 !important;
+}
+
+.shield-sfu {
+    background-color: #a0a0a0 !important;
+}
+
+.shield-manawatu {
+    background-color: #404040 !important;
 }

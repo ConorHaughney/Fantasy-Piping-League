@@ -202,7 +202,22 @@ export default function Page() {
             {selectedShield}
           </h2>
           <div className="bg-[#222] rounded p-4 text-white text-center">
-            <AddBand judgeType={selectedShield} onBandAdded={handleBandAdded} pointsRemaining={pointsRemaining} />
+            <AddBand
+              judgeType={selectedShield}
+              onBandAdded={handleBandAdded}
+              pointsRemaining={pointsRemaining}
+              currentBand={
+                selectedShield === "Piping 1"
+                  ? fantasyTeam?.piping1Band
+                  : selectedShield === "Piping 2"
+                  ? fantasyTeam?.piping2Band
+                  : selectedShield === "Drumming"
+                  ? fantasyTeam?.drummingBand
+                  : selectedShield === "Ensemble"
+                  ? fantasyTeam?.ensembleBand
+                  : undefined
+              }
+            />
           </div>
         </div>
       )}

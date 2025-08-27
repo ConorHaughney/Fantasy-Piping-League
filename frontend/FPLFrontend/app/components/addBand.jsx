@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { searchBands } from "./bandDataManager";
 
-const AddBand = ({ judgeType, onBandAdded, pointsRemaining}) => {
+const AddBand = ({ judgeType, onBandAdded, pointsRemaining, currentBand }) => {
     const [bandName, setBandName] = useState("");
     const [selectedBand, setSelectedBand] = useState(null);
     const [searchResults, setSearchResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isAdding, setIsAdding] = useState(false);
+    const [isRemoving, setIsRemoving] = useState(false);
 
     // Map frontend judge types to backend expected values
     const mapJudgeTypeToBackend = (frontendJudgeType) => {
@@ -53,7 +55,7 @@ const AddBand = ({ judgeType, onBandAdded, pointsRemaining}) => {
                 return;
             }
 
-            setIsLoading(true);
+            setIsAdding(true);
             try {
                 const token = localStorage.getItem("token");
 
@@ -112,8 +114,50 @@ const AddBand = ({ judgeType, onBandAdded, pointsRemaining}) => {
                 console.error('Error adding band:', error);
                 alert(`Failed to add band: ${error.message}`);
             } finally {
-                setIsLoading(false);
+                setIsAdding(false);
             }
+        }
+    };
+
+    const handleRemoveBand = async () => {
+        setIsRemoving(true);
+        try {
+            const token = localStorage.getItem("token");
+            const backendJudgeType = mapJudgeTypeToBackend(judgeType);
+
+            const response = await fetch('http://localhost:8080/api/fantasy-teams/remove-band', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    judgeType: backendJudgeType
+                }),
+            });
+
+            if (!response.ok) {
+                let errorMessage = `HTTP error! status: ${response.status}`;
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error || errorData.message || errorMessage;
+                } catch (parseError) {
+                    const errorText = await response.text();
+                    errorMessage = errorText || errorMessage;
+                }
+                throw new Error(errorMessage);
+            }
+
+            alert(`The band removed from your ${judgeType} choice!`);
+
+            if (onBandAdded) {
+                onBandAdded();
+            }
+        } catch (error) {
+            console.error('Error removing band:', error);
+            alert(`Failed to remove band: ${error.message}`);
+        } finally {
+            setIsRemoving(false);
         }
     };
 
@@ -166,13 +210,13 @@ const AddBand = ({ judgeType, onBandAdded, pointsRemaining}) => {
             <div className="flex gap-2">
                 <button
                     onClick={handleAddBand}
-                    disabled={!selectedBand || isLoading}
+                    disabled={!selectedBand || isAdding}
                     className={`flex-1 py-2 px-4 rounded-lg font-medium transition ${selectedBand && !isLoading
                         ? "bg-[#FF8A00] hover:bg-[#E52E71] text-white"
                         : "bg-gray-600 text-gray-400 cursor-not-allowed"
                         }`}
                 >
-                    {isLoading ? "Adding..." : "Add Band"}
+                    {isAdding ? "Adding..." : "Add Band"}
                 </button>
 
                 <button
@@ -187,6 +231,15 @@ const AddBand = ({ judgeType, onBandAdded, pointsRemaining}) => {
                     Clear
                 </button>
             </div>
+            {currentBand && (
+                <button
+                    onClick={handleRemoveBand}
+                    disabled={isRemoving}
+                    className="w-full mt-4 py-2 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition"
+                >
+                    {isRemoving ? "Removing..." : "Remove Band"}
+                </button>
+            )}
         </div>
     );
 };

@@ -27,12 +27,16 @@ public class Band {
     @Column(name = "points_cost")
     private Integer pointsCost;
 
+    @Column(name = "logo_url")
+    private String logoUrl;
+
     // Constructors
     public Band() {}
 
-    public Band(String bands, Integer grade, Integer pointsCost) {
+    public Band(String bands, Integer grade, Integer pointsCost, String logoUrl) {
         this.bands = bands;
         this.grade = grade;
         this.pointsCost = pointsCost;
+        this.logoUrl = logoUrl;
     }
 }

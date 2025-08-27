@@ -83,6 +83,16 @@ public class FantasyTeamService {
         }
     }
 
+    public FantasyTeam save(FantasyTeam team) {
+        try {
+            return fantasyTeamRepository.save(team);
+        } catch (Exception e) {
+            System.err.println("SERVICE ERROR in save: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     public FantasyTeam getFantasyTeamByUsername(String username) {
         try {
             System.out.println("=== SERVICE: getFantasyTeamByUsername ===");

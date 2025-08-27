@@ -40,7 +40,7 @@ const BandDataManager = () => {
     const fetchAndCacheBands = async () => {
         try {
             const token = localStorage.getItem('token');
-            
+
             const response = await fetch('http://localhost:8080/api/fantasy-teams/test-bands', {
                 method: 'GET',
                 headers: {
@@ -54,7 +54,7 @@ const BandDataManager = () => {
             }
 
             const data = await response.json();
-            
+
             if (data.bands && data.bands.length > 0) {
                 localStorage.setItem(BANDS_CACHE_KEY, JSON.stringify(data.bands));
                 localStorage.setItem(CACHE_EXPIRY_KEY, Date.now().toString());

@@ -1,6 +1,99 @@
 import React from "react";
 import "./shield.css";
 
+const getShieldClass = (band, assigned) => {
+    if (!band) return "shield";
+    const name = band.bands.toLowerCase();
+    let custom = "";
+
+    switch (true) {
+        case name.includes("inveraray"):
+            custom = "shield-idpb";
+            break;
+        case name.includes("field marshal"):
+            custom = "shield-fmm";
+            break;
+        case name.includes("shotts"):
+            custom = "shield-shotts";
+            break;
+        case name.includes("police scotland fife"):
+            custom = "shield-psf";
+            break;
+        case name.includes("st laurence"):
+            custom = "shield-slot";
+            break;
+        case name.includes("boghall"):
+            custom = "shield-boghall";
+            break;
+        case name.includes("power"):
+            custom = "shield-power";
+            break;
+        case name.includes("ravara"):
+            custom = "shield-ravara";
+            break;
+        case name.includes("closkelt"):
+            custom = "shield-closkelt";
+            break;
+        case name.includes("johnstone"):
+            custom = "shield-johnstone";
+            break;
+        case name.includes("78th fraser"):
+            custom = "shield-78fh";
+            break;
+        case name.includes("thomas alumni"):
+            custom = "shield-thomas";
+            break;
+        case name.includes("simon fraser"):
+            custom = "shield-sfu";
+            break;
+        case name.includes("manawatu"):
+            custom = "shield-manawatu";
+            break;
+        default:
+            custom = "";
+    }
+    return `shield${assigned ? " assigned" : ""} ${custom}`;
+};
+
+// Helper: assign a custom logo style for each band
+const getLogoStyle = (band) => {
+    if (!band) return { width: "90%", height: "90%", objectFit: "contain", transform: "translateY(-5px)" };
+    const name = band.bands.toLowerCase();
+
+    switch (true) {
+        case name.includes("inveraray"):
+            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-10px)" };
+        case name.includes("field marshal"):
+            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-8px)" };
+        case name.includes("shotts"):
+            return { width: "88%", height: "88%", objectFit: "contain", transform: "translateY(-7px)" };
+        case name.includes("police scotland fife"):
+            return { width: "75%", height: "75%", objectFit: "contain", transform: "translateY(-6px)" };
+        case name.includes("st laurence"):
+            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-8px)" };
+        case name.includes("boghall"):
+            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-9px)" };
+        case name.includes("power"):
+            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-7px)" };
+        case name.includes("ravara"):
+            return { width: "90%", height: "90%", objectFit: "contain", transform: "translateY(-5px)" };
+        case name.includes("closkelt"):
+            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-6px)" };
+        case name.includes("johnstone"):
+            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-10px)" };
+        case name.includes("78th fraser"):
+            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-8px)" };
+        case name.includes("thomas alumni"):
+            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-7px)" };
+        case name.includes("simon fraser"):
+            return { width: "85%", height: "85%", objectFit: "contain", transform: "translateY(-9px)" };
+        case name.includes("manawatu"):
+            return { width: "80%", height: "80%", objectFit: "contain", transform: "translateY(-8px)" };
+        default:
+            return { width: "90%", height: "90%", objectFit: "contain", transform: "translateY(-5px)" };
+    }
+};
+
 const BandPark = ({ onShieldClick, fantasyTeam, isLoading }) => {
     const circleSize = 140;
     const secondCircleSize = circleSize - 10;
@@ -69,7 +162,7 @@ const BandPark = ({ onShieldClick, fantasyTeam, isLoading }) => {
 
             {/* Piping Judge 1 Shield */}
             <div
-                className={`shield ${hasAssignedBand("Piping 1") ? "assigned" : ""}`}
+                className={getShieldClass(fantasyTeam?.piping1Band, hasAssignedBand("Piping 1"))}
                 style={{
                     position: "absolute",
                     top: "25%",
@@ -83,7 +176,15 @@ const BandPark = ({ onShieldClick, fantasyTeam, isLoading }) => {
                 title={fantasyTeam?.piping1Band ? `Assigned: ${fantasyTeam.piping1Band.bands}` : "Click to assign a band"}
             >
                 {hasAssignedBand("Piping 1") ? (
-                    <div className="band-name">{getBandName(fantasyTeam.piping1Band)}</div>
+                    fantasyTeam.piping1Band.logoUrl ? (
+                        <img
+                            src={fantasyTeam.piping1Band.logoUrl}
+                            alt={fantasyTeam.piping1Band.bands}
+                            style={getLogoStyle(fantasyTeam.piping1Band)}
+                        />
+                    ) : (
+                        <div className="band-name">{getBandName(fantasyTeam.piping1Band)}</div>
+                    )
                 ) : (
                     <div className="plus"></div>
                 )}
@@ -91,7 +192,7 @@ const BandPark = ({ onShieldClick, fantasyTeam, isLoading }) => {
 
             {/* Piping Judge 2 Shield */}
             <div
-                className={`shield ${hasAssignedBand("Piping 2") ? "assigned" : ""}`}
+                className={getShieldClass(fantasyTeam?.piping2Band, hasAssignedBand("Piping 2"))}
                 style={{
                     position: "absolute",
                     top: "30%",
@@ -105,7 +206,15 @@ const BandPark = ({ onShieldClick, fantasyTeam, isLoading }) => {
                 title={fantasyTeam?.piping2Band ? `Assigned: ${fantasyTeam.piping2Band.bands}` : "Click to assign a band"}
             >
                 {hasAssignedBand("Piping 2") ? (
-                    <div className="band-name">{getBandName(fantasyTeam.piping2Band)}</div>
+                    fantasyTeam.piping2Band.logoUrl ? (
+                        <img
+                            src={fantasyTeam.piping2Band.logoUrl}
+                            alt={fantasyTeam.piping2Band.bands}
+                            style={getLogoStyle(fantasyTeam.piping2Band)}
+                        />
+                    ) : (
+                        <div className="band-name">{getBandName(fantasyTeam.piping2Band)}</div>
+                    )
                 ) : (
                     <div className="plus"></div>
                 )}
@@ -113,7 +222,7 @@ const BandPark = ({ onShieldClick, fantasyTeam, isLoading }) => {
 
             {/* Drumming Judge Shield */}
             <div
-                className={`shield ${hasAssignedBand("Drumming") ? "assigned" : ""}`}
+                className={getShieldClass(fantasyTeam?.drummingBand, hasAssignedBand("Drumming"))}
                 style={{
                     position: "absolute",
                     bottom: "25%",
@@ -127,7 +236,15 @@ const BandPark = ({ onShieldClick, fantasyTeam, isLoading }) => {
                 title={fantasyTeam?.drummingBand ? `Assigned: ${fantasyTeam.drummingBand.bands}` : "Click to assign a band"}
             >
                 {hasAssignedBand("Drumming") ? (
-                    <div className="band-name">{getBandName(fantasyTeam.drummingBand)}</div>
+                    fantasyTeam.drummingBand.logoUrl ? (
+                        <img
+                            src={fantasyTeam.drummingBand.logoUrl}
+                            alt={fantasyTeam.drummingBand.bands}
+                            style={getLogoStyle(fantasyTeam.drummingBand)}
+                        />
+                    ) : (
+                        <div className="band-name">{getBandName(fantasyTeam.drummingBand)}</div>
+                    )
                 ) : (
                     <div className="plus"></div>
                 )}
@@ -135,7 +252,7 @@ const BandPark = ({ onShieldClick, fantasyTeam, isLoading }) => {
 
             {/* Ensemble Judge Shield */}
             <div
-                className={`shield ${hasAssignedBand("Ensemble") ? "assigned" : ""}`}
+                className={getShieldClass(fantasyTeam?.ensembleBand, hasAssignedBand("Ensemble"))}
                 style={{
                     position: "absolute",
                     bottom: "5%",
@@ -149,7 +266,15 @@ const BandPark = ({ onShieldClick, fantasyTeam, isLoading }) => {
                 title={fantasyTeam?.ensembleBand ? `Assigned: ${fantasyTeam.ensembleBand.bands}` : "Click to assign a band"}
             >
                 {hasAssignedBand("Ensemble") ? (
-                    <div className="band-name">{getBandName(fantasyTeam.ensembleBand)}</div>
+                    fantasyTeam.ensembleBand.logoUrl ? (
+                        <img
+                            src={fantasyTeam.ensembleBand.logoUrl}
+                            alt={fantasyTeam.ensembleBand.bands}
+                            style={getLogoStyle(fantasyTeam.ensembleBand)}
+                        />
+                    ) : (
+                        <div className="band-name">{getBandName(fantasyTeam.ensembleBand)}</div>
+                    )
                 ) : (
                     <div className="plus"></div>
                 )}

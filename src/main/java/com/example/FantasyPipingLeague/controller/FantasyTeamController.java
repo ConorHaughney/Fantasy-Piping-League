@@ -80,6 +80,39 @@ public class FantasyTeamController {
         }
     }
 
+    @PostMapping("/remove-band")
+    public ResponseEntity<?> removeBandFromTeam(@RequestBody Map<String, String> request, Authentication auth) {
+        try {
+            String judgeType = request.get("judgeType");
+            String username = auth.getName();
+
+            FantasyTeam team = fantasyTeamService.getFantasyTeamByUsername(username);
+            if (team == null) {
+                return ResponseEntity.badRequest().body(new ErrorResponse("Fantasy team not found"));
+            }
+
+            switch (judgeType.toLowerCase()) {
+                case "piping1" -> team.setPiping1Band(null);
+                case "piping2" -> team.setPiping2Band(null);
+                case "drumming" -> team.setDrummingBand(null);
+                case "ensemble" -> team.setEnsembleBand(null);
+                default -> {
+                    return ResponseEntity.badRequest().body(new ErrorResponse("Invalid judge type"));
+                }
+            }
+
+            fantasyTeamService.save(team);
+
+            return ResponseEntity.ok(new AddBandResponse(
+                    "Band removed successfully",
+                    null,
+                    null,
+                    judgeType));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ErrorResponse("Failed to remove band: " + e.getMessage()));
+        }
+    }
+
     @GetMapping("/my-team")
     public ResponseEntity<?> getMyTeam(Authentication auth) {
         try {
