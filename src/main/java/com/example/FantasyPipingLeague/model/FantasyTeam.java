@@ -48,6 +48,9 @@ public class FantasyTeam {
     @JoinColumn(name = "ensamble_band_id")
     private Band ensembleBand;
 
+    @Column(name="total_points")
+    private Integer totalPoints;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

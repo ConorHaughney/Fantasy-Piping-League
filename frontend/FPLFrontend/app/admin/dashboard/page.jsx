@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import AdminNavbar from '../components/AdminNavbar';
 import StatsCards from '../components/StatsCards';
 import UserManagement from '../components/UserManagement';
+import AddCompetitionResult from '../components/AddCompetitionResult';
 
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('stats');
@@ -57,7 +58,7 @@ export default function AdminDashboard() {
                         <nav className="-mb-px flex">
                             <button
                                 onClick={() => setActiveTab('stats')}
-                                className={`py-2 px-4 border-b-2 font-medium text-sm ${activeTab === 'stats'
+                                className={`py-2 px-4 border-b-2 font-medium text-sm cursor-pointer ${activeTab === 'stats'
                                     ? 'border-blue-500 text-blue-600'
                                     : 'border-transparent text-gray-500 hover:text-gray-700'
                                     }`}
@@ -66,12 +67,21 @@ export default function AdminDashboard() {
                             </button>
                             <button
                                 onClick={() => setActiveTab('users')}
-                                className={`py-2 px-4 border-b-2 font-medium text-sm ${activeTab === 'users'
+                                className={`py-2 px-4 border-b-2 font-medium text-sm cursor-pointer ${activeTab === 'users'
                                     ? 'border-blue-500 text-blue-600'
                                     : 'border-transparent text-gray-500 hover:text-gray-700'
                                     }`}
                             >
                                 User Management
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('addResult')}
+                                className={`py-2 px-4 border-b-2 font-medium text-sm cursor-pointer ${activeTab === 'addResult'
+                                    ? 'border-blue-500 text-blue-600'
+                                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                                    }`}
+                            >
+                                Add Competition Result
                             </button>
                         </nav>
                     </div>
@@ -79,6 +89,7 @@ export default function AdminDashboard() {
                     <div className="p-6">
                         {activeTab === 'stats' && <StatsCards />}
                         {activeTab === 'users' && <UserManagement />}
+                        {activeTab === 'addResult' && <AddCompetitionResult />}
                     </div>
                 </div>
             </div>
